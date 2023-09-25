@@ -1,0 +1,10 @@
+function main(workbook: ExcelScript.Workbook) {
+	// Add a new worksheet
+	let sheet1 = workbook.addWorksheet();
+	// Set width of column(s) at range A:A on sheet1 to 177
+	sheet1.getRange("A:A").getFormat().setColumnWidth(177);
+	// Set range A1:A3 on sheet1
+	sheet1.getRange("A1:A5").setValues([["Number of Variables"],["Objective Function Variable"],["Number of Constraints"],["Constraint Variables"],["Objective Function"]]);
+	
+	sheet1.activate();
+}

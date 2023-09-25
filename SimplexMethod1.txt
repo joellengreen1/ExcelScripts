@@ -1,0 +1,80 @@
+function main(workbook: ExcelScript.Workbook, 
+Number_Of_Variables:number,
+Objective_Function: string,
+Number_Of_Constraints:number,
+Type_Of_Simplex_0_Max_1_Min: number
+) {
+    let flag: Boolean;
+    let cr = [] as string[];
+    let vn = [] as string[];
+    cr[0] = "x1";
+    cr[1] = "x2";
+    cr[2] = "x3";
+    cr[3] = "x4";
+    cr[4] = "x5";
+    vn[0] = "Maximize";
+    vn[1] = "Minimize";
+
+    // Assign active spreadsheet to Active worksheet
+    let sheet = workbook.getActiveWorksheet();
+    // Test if the Worsheet has Number of Variables in cell A1
+    let wv = sheet.getRange("A1");
+    let w = wv.getValues() as string[][];
+    let sx = "Number of Variables";
+    if (String(w) === sx){
+      let nv = sheet.getRange("B1:B1");
+      let n = nv.setValues([[Number_Of_Variables]]);
+      let nv1 = sheet.getRange("B2:B2");
+      let o = nv1.setValues([[Objective_Function]]);
+      let nv2 = sheet.getRange("B3:B3");
+      let m = nv2.setValues([[Number_Of_Constraints]]);
+      let p = Objective_Function.toString.length;
+      // test whether there are 2 or more variables
+      
+      if (Number_Of_Variables < 2){
+           console.log("# of variables missing.");
+           flag = true;
+      };
+      if (p > 1){
+           console.log("Objective Function Variable incorrectly entered.");
+           flag = true;
+      };
+      if (Number_Of_Constraints < 1){
+           console.log("# of constraints missing.");
+           flag = true;
+      };
+      
+      if (flag){
+           console.log("Error, Attention")
+      } else {
+        //Create array of variable names
+       let j = Number_Of_Variables - 2;
+       let ofx = Objective_Function.concat("=");
+      sheet.getCell(4, 1).setValue([[ofx]]);
+      for(let i=0; i < Number_Of_Variables; i++)
+        {
+          sheet.getCell(3, i+2).setValue(cr[i]);
+        }
+      sheet.getCell(3, Number_Of_Variables+3).setValue([["ans"]]);
+     
+      }
+      sheet.getCell(4,Number_Of_Variables + 2).setValue([[vn[Type_Of_Simplex_0_Max_1_Min]]]);
+      let k = Number_Of_Constraints;
+      for(let i=1; i <= Number_Of_Constraints; i++){
+        sheet.getCell(4+i, 0).setValue([[i]]);
+        if (Type_Of_Simplex_0_Max_1_Min = 0) {
+            sheet.getCell(4+i, Number_Of_Variables+2).setValue([["<="]]);
+        } else {
+          sheet.getCell(4 + i, Number_Of_Variables + 2).setValue([[">="]]);
+        }
+      }      
+      
+
+
+
+
+    } else {
+      console.log("Run Beginning Script.  Then run second script.");
+    }
+  
+}

@@ -1,0 +1,115 @@
+function main(workbook: ExcelScript.Workbook) {
+    // Check that data is in the Excel Spreadsheet
+    let sheet = workbook.getActiveWorksheet();
+    var srang: string[] = ['D', 'E', 'F', 'G', 'H', 'I'];
+    var irang: string[] = ['C', 'D', 'E', 'F', 'G', 'H', 'I'];
+    var arr: number[][] = [];
+    var arrans: number[][] = [];
+    var aobf: number[][] = [];
+    var vrang: string = 'C5:';  //objective function
+    var xrang: string = 'C6:';  //constraints range
+    var trang: string = 'F6:F';
+    
+    // get the values for the variables above
+
+    let Number_Of_Variable = sheet.getRange("B1").getValue() as number;
+    let Objective_Function = sheet.getRange("B2").getValue() as string;
+    let Number_Of_Constraints = sheet.getRange("B3").getValue() as number;
+    let type_Simplex = sheet.getRange("E5").getValue() as string;
+    let Type_Of_Simplex_0_Max_1_Min = 0;  //Set the variable to Maximize type of Simplex Method
+
+    if(type_Simplex != "Maximuize"){
+      let Type_Of_Simplex_0_Max_1_Min = 1;    //Set the variable to Minimize type of Simplex Method
+    } 
+
+    let cn = Number_Of_Variable;    //Number of Variables
+    let rn = Number_Of_Constraints;  //Number of Constraints
+    let xc = rn+5;                      //ending row of constraints
+    let xcc = xc.toString();           // convert to string for range
+    //
+    let rnv = xrang.concat(srang[cn-2], xcc );  //Range for Constraints variable coefficient
+    console.log("Constraint Range");
+    console.log(rnv);
+    let dnv = vrang.concat(srang[cn-2], "5");
+    console.log("Objective Function Range");
+    console.log(dnv);
+    let env = trang.concat(xcc); //Answer Values for constraints
+    console.log("Answer");
+    console.log(env);
+       
+    // constraint coefficients
+    arr = sheet.getRange(rnv).getValues() as number[][];  
+    //answer numbers 
+    arrans = sheet.getRange(dnv).getValues() as number[][];
+    // objective function coefficients
+    aobf = sheet.getRange(env).getValues() as number[][];
+    let flagx = false;
+    // check to make sure numbers were enter correctly greater than or equal to zero answers > 0.
+    console.log("Check Constraint coeffients.");
+    for(let i=0; i<cn; i++)
+    {
+      for(let j=0; j<rn; j++)
+      {
+         let n = arr[i][j];
+         if (n >= 0)
+         {
+          console.log(n);
+          
+         }else 
+         {
+           flagx = true;           
+         }
+        
+      }
+    }
+    if(flagx){
+      console.log("Error entering coefficients of variables for constraint function.");
+    }
+  console.log("Check the objective function coefficient.");
+  let flagz = false;
+  var nn: number;
+  rowCount = sheet.getRange(dnv).getRowCount();
+  columnCount = sheet.getRange(dnv).getColumnCount();
+  for(let i = 0; i < rowCount; i++)
+  {
+    for(let j = 0; j < columnCount; j++)
+    {
+      let nn = arrans[i][j];
+      if (nn => 0) 
+      {
+        console.log(nn);
+      } else {
+        flagz = true;
+      }
+    }
+  }
+  if(flagz){
+    console.log("Error entering answer values in constraints.");
+  } 
+  //check the objective function variable coefficient
+  console.log("Check ans coefficient values");
+  rowCount = sheet.getRange(env).getRowCount();
+  columnCount = sheet.getRange(env).getColumnCount();
+  let flagu = false;
+  for(let i = 0; i < rowCount; i++)
+  {
+    for(let j = 0; j < columnCount; j++)
+    {
+      let nn = aobf[i][j];
+      if(nn => 0)
+      {
+        console.log(nn);
+      } else {
+        flagu = true;
+      }
+    }
+    if (flagu) {
+      console.log("Error entering objective function coefficient values.");
+    } 
+  }
+  if(flagu || flagx || flagz){
+
+  } else {
+    console.log("Initial Tableau");
+  }
+}
